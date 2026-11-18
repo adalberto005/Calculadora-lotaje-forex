@@ -13,6 +13,7 @@ export default function PaymentModal({ open, onClose, onActivated }: Props) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [qrLoaded, setQrLoaded] = useState(true);
 
   useEffect(() => {
     if (open) {
@@ -20,6 +21,7 @@ export default function PaymentModal({ open, onClose, onActivated }: Props) {
       setError("");
       setSuccess(false);
       setCopied(false);
+      setQrLoaded(true);
     }
   }, [open]);
 
@@ -117,12 +119,20 @@ export default function PaymentModal({ open, onClose, onActivated }: Props) {
 
                 {/* QR placeholder */}
                 <div className="flex flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white p-4">
-                  <div className="flex h-36 w-36 items-center justify-center rounded-xl bg-slate-50">
-                    {/* QR visual placeholder — reemplaza por tu QR real */}
-                    <div className="relative flex h-32 w-32 items-center justify-center rounded-lg border-2 border-dashed border-slate-300">
-                      <QrCode className="h-16 w-16 text-slate-300" />
-                      <span className="absolute bottom-1 text-[9px] text-slate-400">QR Binance Pay</span>
-                    </div>
+                  <div className="flex h-36 w-36 items-center justify-center overflow-hidden rounded-xl bg-slate-50">
+                    {qrLoaded ? (
+                      <img
+                        src="/binance-pay-qr.png"
+                        alt="QR de Binance Pay para pagar 1.50 USDT"
+                        className="h-full w-full object-contain"
+                        onError={() => setQrLoaded(false)}
+                      />
+                    ) : (
+                      <div className="relative flex h-32 w-32 items-center justify-center rounded-lg border-2 border-dashed border-slate-300">
+                        <QrCode className="h-16 w-16 text-slate-300" />
+                        <span className="absolute bottom-1 text-[9px] text-slate-400">QR no disponible</span>
+                      </div>
+                    )}
                   </div>
                   <p className="text-center text-xs text-slate-400">Escanea el QR o usa el ID de Binance Pay</p>
                 </div>
