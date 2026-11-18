@@ -1,0 +1,13 @@
+{
+  "projectId": "72999191",
+  "functions": {
+    "nowpayments": {
+      "hasChanged": false,
+      "hash": "018124b7425c4a176a3d7836f5fdeb69c7e9b8171ee0a62667e36985d5e6d690"
+    },
+    "verify-payment": {
+      "hasChanged": false,
+      "hash": "3b6bbab07a0be1e4c3632fc179387d21e1b9a571e51322273ce238600f1aae0b"
+    }
+  }
+}

@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
-import { Calculator, Download, AlertTriangle, TrendingUp, Coins, Target } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Calculator, Download, AlertTriangle, TrendingUp, Coins, Target, Crown } from "lucide-react";
 import { Button, Card, NumberInput, Stat } from "@/components/ui";
 import { exportPdf } from "@/lib/exportPdf";
+import { isPro as checkPro, setPro } from "@/lib/payments";
+import PaymentModal from "@/components/PaymentModal";
 
 const MIN_PIPS = 1;
 const MAX_PIPS = 12;
@@ -17,6 +19,12 @@ type TableRow = { pips: number; lotaje: string; units: string; risk: string };
 export default function LotCalculator() {
   const [account, setAccount] = useState("10000");
   const [riskPct, setRiskPct] = useState("1.0");
+  const [pro, setProState] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    setProState(checkPro());
+  }, []);
 
   const errors = {
     account: account === "" || Number(account) <= 0 ? "El monto debe ser mayor a 0" : null,
@@ -71,6 +79,10 @@ export default function LotCalculator() {
   };
 
   const handleExport = async () => {
+    if (!pro) {
+      setModalOpen(true);
+      return;
+    }
     setExporting(true);
     try {
       await exportPdf(
@@ -85,6 +97,11 @@ export default function LotCalculator() {
     } finally {
       setExporting(false);
     }
+  };
+
+  const handleActivated = () => {
+    setPro(true);
+    setProState(true);
   };
 
   return (
@@ -214,21 +231,34 @@ export default function LotCalculator() {
             </table>
           </div>
           <div className="mt-4 flex items-center justify-between">
-            <p className="text-xs text-slate-400">
-              {validRows.length > 0
-                ? `Lote estándar (100k) · ${validRows.length} filas`
-                : "Sin datos para exportar"}
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-slate-400">
+                {validRows.length > 0
+                  ? `Lote estándar (100k) · ${validRows.length} filas`
+                  : "Sin datos para exportar"}
+              </p>
+              {pro && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                  <Crown className="h-3 w-3" /> Pro
+                </span>
+              )}
+            </div>
             <Button
               icon={<Download className="h-4 w-4" />}
               onClick={handleExport}
               disabled={validRows.length === 0 || exporting}
             >
-              {exporting ? "Generando…" : "Exportar PDF"}
+              {exporting ? "Generando…" : pro ? "Exportar PDF" : "Exportar PDF (Pro)"}
             </Button>
           </div>
         </Card>
       </div>
+
+      <PaymentModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onActivated={handleActivated}
+      />
     </div>
   );
 }
