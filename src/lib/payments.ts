@@ -20,6 +20,6 @@ export function setPro(value: boolean): void {
   }
 }
 
-export const BINANCE_PAY_ID = "TU_BINANCE_PAY_ID";
+export const BINANCE_PAY_ID = "ADALBERTO05@GMAIL.COM";
 export const PAYMENT_AMOUNT = "1.50";
 export const PAYMENT_CURRENCY = "USDT";
