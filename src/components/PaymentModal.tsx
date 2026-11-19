@@ -122,7 +122,7 @@ export default function PaymentModal({ open, onClose, onActivated }: Props) {
                   <div className="flex h-36 w-36 items-center justify-center overflow-hidden rounded-xl bg-slate-50">
                     {qrLoaded ? (
                       <img
-                        src="/binance-pay-qr.png"
+                        src="/WhatsApp_Image_2026-11-19_at_09.55.37.jpeg"
                         alt="QR de Binance Pay para pagar 1.50 USDT"
                         className="h-full w-full object-contain"
                         onError={() => setQrLoaded(false)}
