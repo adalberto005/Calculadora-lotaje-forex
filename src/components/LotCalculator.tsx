@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Calculator, Download, AlertTriangle, TrendingUp, Coins, Target, Crown } from "lucide-react";
+import { Calculator, Download, AlertTriangle, TrendingUp, Coins, Target, Crown, LockKeyhole } from "lucide-react";
 import { Button, Card, NumberInput, Stat } from "@/components/ui";
 import { exportPdf } from "@/lib/exportPdf";
 import { isPro as checkPro, setPro } from "@/lib/payments";
 import PaymentModal from "@/components/PaymentModal";
 
 const MIN_PIPS = 1;
-const MAX_PIPS = 12;
+const MAX_PIPS = 50;
 const STANDARD_LOT = 100_000; // unidades por lote estándar (1.00)
 const PIP_VALUE_PER_LOT = 10; // USD por pip por lote estándar
 
@@ -193,7 +193,7 @@ export default function LotCalculator() {
             <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
             Cada fila muestra el lotaje recomendado para detener la pérdida en N pips manteniendo el riesgo elegido.
           </div>
-          <div className="overflow-hidden rounded-lg border border-slate-100">
+          <div className="relative overflow-hidden rounded-lg border border-slate-100">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
@@ -212,7 +212,10 @@ export default function LotCalculator() {
                   </tr>
                 )}
                 {validRows.map((r) => (
-                  <tr key={r.pips} className="hover:bg-slate-50/60 transition-colors">
+                  <tr
+                    key={r.pips}
+                    className={`transition-colors ${!pro && r.pips >= 4 ? "select-none blur-[5px]" : "hover:bg-slate-50/60"}`}
+                  >
                     <td className="px-4 py-2.5">
                       <span className="inline-flex items-center gap-2">
                         <span className="flex h-6 w-6 items-center justify-center rounded-md bg-slate-100 text-xs font-semibold text-slate-600">
@@ -229,6 +232,27 @@ export default function LotCalculator() {
                 ))}
               </tbody>
             </table>
+            {!pro && validRows.length > 3 && (
+              <>
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 top-24 bg-gradient-to-b from-white/0 via-white/55 to-white/95" />
+                <div className="absolute left-1/2 top-[62%] z-10 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-slate-200 bg-white/95 p-5 text-center shadow-xl shadow-slate-900/15 backdrop-blur-sm">
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+                    <LockKeyhole className="h-5 w-5" />
+                  </div>
+                  <p className="mt-3 text-sm font-semibold leading-5 text-slate-800">
+                    🔒 Visualiza la tabla completa (hasta 50 pips) y exporta tus reportes
+                  </p>
+                  <div className="mt-4 flex justify-center">
+                    <Button
+                      icon={<Download className="h-4 w-4" />}
+                      onClick={() => setModalOpen(true)}
+                    >
+                      📄 Descargar PDF Completo
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
           <div className="mt-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
