@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import { Calculator as CalcIcon, Gauge } from "lucide-react";
 import LotCalculator from "@/components/LotCalculator";
 
 export default function App() {
+  useEffect(() => {
+    document.title = "Calculadora de Lotaje Forex & Gestión de Riesgo Gratis";
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur-sm">
